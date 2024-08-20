@@ -1,0 +1,74 @@
+libname kbn "  /home/u63817575/project.csv";
+data project; 
+infile "   /home/u63817575/project.csv" dlm="  ,   ";
+input sex $   grade12 year $ course $ degree  scholarship $ socialising $ alcohol  miss classes $ parents $  ;
+run;
+
+proc gchart data=project;
+pie3d grade12 ;
+run;
+
+proc gchart data=project;
+pie3d degree ;
+run;
+
+proc sgplot data=project;
+vbar course/ response=grade12;
+run; 
+
+proc sgplot data=project;
+vbar classes /response=alcohol;
+run;
+
+proc print data=project;
+run;
+
+proc reg data=project;
+model grade12=degree;
+run;
+
+proc anova data=project;
+class grade12;
+model degree=grade12;
+run;
+
+proc corr data=project;
+var grade12 degree alcohol;
+run;
+
+proc means data=project;
+run;
+
+title "Ttest";
+proc ttest data=PROJECT;
+ var grade12 ;
+run;
+
+title "Univariate";
+proc univariate data=project;
+ var degree;
+id sex;
+histogram degree/normal(mu=est sigma=est); inset skewness kurtosis;
+probplot degree/normal(mu=est sigma=est); inset skewness kurtosis;
+run;
+
+title "Smooth Curve";
+ proc sgplot data=project; 
+ pbspline x= degree  y= grade12;
+ run;
+ 
+ proc gchart data=project; 
+ hbar3d  grade12 degree alcohol ;
+run; 
+
+title "HBOX";
+proc sgplot data=project;
+hbox degree/group=year;
+ run;
+ 
+ proc sgplot data=project;
+hbox grade12/group=year;
+ run;
+ quit;
+ 
+ 
